@@ -2,6 +2,8 @@ function output = main()
     petronas_logo();
     serviceType();
     serviceTime();
+    userInput();
+    
     
 end
 
@@ -33,6 +35,7 @@ function output= serviceType(x)
     printf('|Ron 97       |0.30         |0.60         |      31 - 60              |    6.50       |\n');
     printf('|Diesel       |0.40         |1.00         |      61 - 100             |    7.50       |\n');
     printf('--------------------------------------------------------------------------------------|\n');
+    
 end
 
 function output = serviceTime(x)
@@ -44,6 +47,38 @@ function output = serviceTime(x)
     printf('|      2       |                   3,4                  |\n');
     printf('---------------------------------------------------------\n');
 end
+
+
+function output = userInput(x)
+    printf('\n1 - Mixed LCG\n');
+    printf('\n2 - Cumulative LCG\n');
+    printf('\n3 - Multiplicative LCG\n');
+    
+    x = input('Choose the numbers for the number generator');
+    while(x ~= 1 & x ~= 2 & x ~= 3)
+         disp('Invalid Input');
+         x = input('Choose the numbers for the number generator');
+    end
+    
+    if(x == 1)
+        disp('Chosed 1');
+    end
+        
+    if (x == 2)
+        disp('Chosed 2');
+    end
+    
+    if ( x == 3)
+        disp('Chosed 3');
+    end
+    
+end
+        
+
+                     
+         
+
+
 
 
 
