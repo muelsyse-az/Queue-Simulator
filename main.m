@@ -1,3 +1,6 @@
+
+%r=================MAIN FUNCTION================%r
+
 function output = main()
     petronas_logo();
     serviceType();
@@ -7,6 +10,10 @@ function output = main()
     
 end
 
+%r===============================================%r
+
+
+%r=====================decorative display ^^==========================%r
 
 function petronas_logo()
     clc;
@@ -26,6 +33,10 @@ function petronas_logo()
     fprintf('\nWelcome to Petronas!\n');
 end
 
+%r=========================================================================%r
+
+%r================================Service Type Table==========================================%r
+
 function output= serviceType(x)
     printf('\nService Type Probability Table\n');
     printf('--------------------------------------------------------------------------------------|\n');
@@ -38,6 +49,12 @@ function output= serviceType(x)
     
 end
 
+%r=========================================================================%r
+
+
+%r================================Service Time Table==========================================%r
+
+
 function output = serviceTime(x)
       printf('\nTypes of Service offered\n');
     printf('---------------------------------------------------------\n'); 
@@ -48,32 +65,134 @@ function output = serviceTime(x)
     printf('---------------------------------------------------------\n');
 end
 
+%r=========================================================================%r
+
+%r=========================USER INPUT FUNCTION==========================================%r
 
 function output = userInput(x)
     printf('\n1 - Mixed LCG\n');
     printf('\n2 - Cumulative LCG\n');
     printf('\n3 - Multiplicative LCG\n');
     
-    x = input('Choose the numbers for the number generator');
-    while(x ~= 1 & x ~= 2 & x ~= 3)
+    LCGTypeInput = input('Choose the numbers for the number generator');
+    while(LCGTypeInput ~= 1 & LCGTypeInput ~= 2 & LCGTypeInput ~= 3)
          disp('Invalid Input');
-         x = input('Choose the numbers for the number generator');
+         LCGTypeInput = input('Choose the numbers for the number generator');
     end
     
-    if(x == 1)
-        disp('Chosed 1');
+    VehiclesAmountInput = input('Input the amount of vehicles for the simulation');
+    printf('\n 1 - Non Peak Hour\n');
+    printf('\n 2 - Peak Hour\n');
+    HourModeInput = input('Choose the hour mode you prefer!');
+    
+    while(HourModeInput ~= 1 & HourModeInput ~= 2)
+        disp('Invalid Input , please try again');
+        HourModeInput = input('Choose the hour mode you prefer!');
+    end
+    
+    
+    
+    if(LCGTypeInput == 1)
+        disp('You chose Mixed LCG!');
+        if(HourModeInput == 1)
+            disp('You chose Non Peak Hour!');
+        end
+        
+        if(HourModeInput == 2)
+            disp('You chose Peak Hour!');
+        end
+        
+        
+        
+        
+        
     end
         
-    if (x == 2)
-        disp('Chosed 2');
+    if (LCGTypeInput == 2)
+        disp('You chose Multiplicative LCG!');
+           if(HourModeInput == 1)
+            disp('You chose Non Peak Hour!');
+        end
+        
+        if(HourModeInput == 2)
+            disp('You chose Peak Hour!');
+        end
+        
     end
     
-    if ( x == 3)
-        disp('Chosed 3');
+    if ( LCGTypeInput == 3)
+        disp('You chose Cumulative LCG!');
+           if(HourModeInput == 1)
+            disp('You chose Non Peak Hour!');
+        end
+        
+        if(HourModeInput == 2)
+            disp('You chose Peak Hour!');
+        end
+     
     end
     
 end
+
+
+%r=============================================================================================%r
+
+
+
+
+%r =============MIXED LCG FUNCTION==========================%r
+
+function output = MixedLCG(seed)
+    a = 166457;
+    c = 1013904223;
+    m = 2^32;
+    
+    persistent X;
+    if isempty(X)
+        X = seed;
+    end
+    X = mod((a * X + c), m);
+    r = X / m;
+end
+
+%r =========================================================%r
+
+
+
+%r =============MULTIPLICATIVE LCG FUNCTION==========================%r
+
+
+function output = MultiplicativeLCG(seed)
+    a = 166457;
+    m = 2^32;
+    
+    persistent X;
+    if isempty(X)
+        X = seed;
+    end
+    X = mod((a * X), m);
+    r = X / m;
+end
+
+%r =========================================================%r
+
+
+%r====================CUMULATIVE LCG===========================================%r
+
+function output = CumulativeLCG(seed)
+    persistent CumulativeSum;
+    if isempty(CumulativeSum)
+        CumulativeSum = 0;
+    end
+    
+    val = MixedLCG(seed);
+    CumSum = CumulativeSum + val;
+    r = mod(CumSum , 1);
+end
+    
+    
         
+%r ============================================================================%r
 
                      
          
