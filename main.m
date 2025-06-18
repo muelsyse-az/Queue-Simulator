@@ -79,7 +79,7 @@ function output = userInput(x)
     
     while(HourModeInput ~= 1 & HourModeInput ~= 2)
         disp('Invalid Input , please try again');
-        HourModeInput = input('Choose the hour mode you prefer!');
+        HourModeInput = input('Choose the hour mode you prefer!\n');
     end
     
     
@@ -146,6 +146,7 @@ function output = MixedLCG(seed)
     end
     X = mod((a * X + c), m);
     r = X / m;
+    refuelingtime(r);
 end
 
 %r =========================================================%r
@@ -165,6 +166,7 @@ function output = MultiplicativeLCG(seed)
     end
     X = mod((a * X), m);
     r = X / m;
+    refuelingtime(r);
 end
 
 %r =========================================================%r
@@ -181,6 +183,7 @@ function output = CumulativeLCG(seed)
     val = MixedLCG(seed);
     CumSum = CumulativeSum + val;
     r = mod(CumSum , 1);
+    refuelingtime(r);
 end
     
     
