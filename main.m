@@ -4,7 +4,7 @@
 function output = main()
     petronas_logo();
     serviceType();
-    serviceTime();
+    ServiceTime();
     userInput();
     
     
@@ -55,15 +55,7 @@ end
 %r================================Service Time Table==========================================%r
 
 
-function output = serviceTime(x)
-      printf('\nTypes of Service offered\n');
-    printf('---------------------------------------------------------\n'); 
-    printf('|  Lane Type   |               Pump Stations            |\n');
-    printf('---------------------------------------------------------\n');
-    printf('|      1       |                   1,2                  |\n');
-    printf('|      2       |                   3,4                  |\n');
-    printf('---------------------------------------------------------\n');
-end
+
 
 %r=========================================================================%r
 
@@ -96,6 +88,7 @@ function output = userInput(x)
         disp('You chose Mixed LCG!');
         if(HourModeInput == 1)
             disp('You chose Non Peak Hour!');
+            
         end
         
         if(HourModeInput == 2)
@@ -195,7 +188,8 @@ end
 %r ============================================================================%r
 
                      
-         
+     
+
 
 
 
