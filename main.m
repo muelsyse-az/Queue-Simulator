@@ -144,8 +144,8 @@ function userInput()
                 pump = 3;
             
             else 
-                [wait_time , pump] = min(pump_end_time(3:4) - current_time); %get wait time, and the pump island that will be free in the earliest moment
-                pump = pump + 2 %offsets referred pump the either 3 or 4
+                [wait_time , idx] = min(pump_end_time(3:4) - current_time); %get wait time, and the pump island that will be free in the earliest moment
+                pump = idx + 2 %offsets referred pump the either 3 or 4
                 current_time = current_time + wait_time; 
             end 
         end
