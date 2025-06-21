@@ -118,7 +118,18 @@ function userInput()
         cars(i).petrol_type = chosenPetrol;
         cars(i).price_per_litre = chosenPrice;
         cars(i).lane = lane;
+        
+     
+        
+        
     end
+       for i=1:VehiclesAmountInput
+           fprintf('\n%s arrived at minute %d and began refueling with %s at Lane %d.\n', ...
+           cars(i).name, ....
+           cars(i).arrival_clock,...
+           cars(i).petrol_type,...
+           cars(i).lane);
+        end
 
     % Display results
     fprintf('\n%-6s | %-6s | %-15s | %-13s | %-12s | %-10s | %-4s | %-12s | %-6s\n', ...
@@ -175,6 +186,10 @@ function [r, nextSeed, cumSum] = CumulativeLCG(seed, cumSum)
     cumSum = mod(cumSum + val, 1);
     r = cumSum;
 end
+
+
+
+
 
 
 
