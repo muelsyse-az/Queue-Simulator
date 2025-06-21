@@ -65,6 +65,7 @@ function userInput()
     current_time = 0;
     petrolData = PetrolType();
     pump_end_time = zeros(1,4); %array that holds the end time for island [1,2,3,4]
+   
 
     for i = 1:VehiclesAmountInput
         % Generate random number
@@ -109,7 +110,7 @@ function userInput()
         lane = mod(i,2) + 1;
 
         current_time = current_time + inter_time;
-
+       
         cars(i).name = ['Car ' num2str(i)];
         cars(i).random_number = rand_num;
         cars(i).interarrival_time = inter_time;
@@ -119,60 +120,67 @@ function userInput()
         cars(i).petrol_type = chosenPetrol;
         cars(i).price_per_litre = chosenPrice;
         cars(i).lane = lane;
+      
         
-        
+         lane =1; %FORCE LANE 1
+         
+         
         %if checks for occupied pumps
         
         if lane == 1
-            if current_time >= pump_end_time(2)
+            if cars(i).arrival_clock >= pump_end_time(2)
                 pump = 2;
                 
-            elseif current_time >= pump_end_time(1)
+            elseif cars(i).arrival_clock >= pump_end_time(1)
                 pump =1;
             
             else 
                 [wait_time , pump] = min(pump_end_time(1:2) - current_time); %get wait time, and the pump island that will be free in the earliest moment
                 current_time = current_time + wait_time; 
+                
             end
         
         
         else 
-            if current_time >= pump_end_time(4)
+            if cars(i).arrival_clock >= pump_end_time(4)
                 pump = 4;
                 
-            elseif current_time >= pump_end_time(3)
+            elseif cars(i).arrival_clock >= pump_end_time(3)
                 pump = 3;
             
             else 
-                [wait_time , idx] = min(pump_end_time(3:4) - current_time); %get wait time, and the pump island that will be free in the earliest moment
-                pump = idx + 2 %offsets referred pump the either 3 or 4
+                [wait_time , pump] = min(pump_end_time(3:4) - current_time); %get wait time, and the pump island that will be free in the earliest moment
+                pump = pump + 2; %offsets referred pump the either 3 or 4
                 current_time = current_time + wait_time; 
+                
+                
+
+                
+                
             end 
         end
+        pump = 1; %FORCE PUMP 1
         
         cars(i).pump = pump;
         
-        %if else to get time service begins
-        if current_time > pump_end_time(pump)
-            start_time = current_time;
-            
-        else
-           start_time = pump_end_time(pump);
-        end 
+        if cars(i).arrival_clock >= pump_end_time(pump)
+            start_time = cars(i).arrival_clock;
+        else 
+            start_time = pump_end_time(pump);
+        end
         
         end_time = start_time + refuel_time;
-
         cars(i).service_begin = start_time;
         cars(i).service_end = end_time;
         cars(i).waiting_time = start_time - cars(i).arrival_clock;
+        
         cars(i).time_spent = end_time - cars(i).arrival_clock;
-
-        % Update pump status
+       
+        
         pump_end_time(pump) = end_time;
-        
-        
-                
-        
+        waited = true;
+    
+    
               
         
         
