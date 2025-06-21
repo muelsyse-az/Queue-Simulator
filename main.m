@@ -1,7 +1,6 @@
 %================= MAIN FUNCTION =================%
 function main()
-    clc;
-    clear;
+  
     petronas_logo();
     serviceType();
     userInput();
@@ -107,7 +106,7 @@ function userInput()
             end
         end
 
-        lane = mod(i,2) + 1;
+        lane = mod(i-1,2) + 1;
 
         current_time = current_time + inter_time;
        
@@ -122,44 +121,30 @@ function userInput()
         cars(i).lane = lane;
       
         
-         lane =1; %FORCE LANE 1
-         
-         
-        %if checks for occupied pumps
         
-        if lane == 1
-            if cars(i).arrival_clock >= pump_end_time(2)
-                pump = 2;
-                
-            elseif cars(i).arrival_clock >= pump_end_time(1)
-                pump =1;
-            
-            else 
-                [wait_time , pump] = min(pump_end_time(1:2) - current_time); %get wait time, and the pump island that will be free in the earliest moment
-                current_time = current_time + wait_time; 
-                
-            end
-        
-        
-        else 
-            if cars(i).arrival_clock >= pump_end_time(4)
-                pump = 4;
-                
-            elseif cars(i).arrival_clock >= pump_end_time(3)
-                pump = 3;
-            
-            else 
-                [wait_time , pump] = min(pump_end_time(3:4) - current_time); %get wait time, and the pump island that will be free in the earliest moment
-                pump = pump + 2; %offsets referred pump the either 3 or 4
-                current_time = current_time + wait_time; 
-                
-                
 
-                
-                
-            end 
-        end
-        pump = 1; %FORCE PUMP 1
+if lane == 1
+    pumpCandidates = [1, 2];
+else
+    pumpCandidates = [3, 4];
+end
+
+[pumpWait, idx] = min(pump_end_time(pumpCandidates) - current_time);
+pump = pumpCandidates(idx);
+
+start_time = max(current_time, pump_end_time(pump));
+end_time = start_time + refuel_time;
+
+      cars(i).lane = lane;
+      cars(i).pump = pump;
+      cars(i).service_begin = start_time;
+      cars(i).service_end = end_time;
+      cars(i).waiting_time = start_time - current_time;
+      cars(i).time_spent = end_time - current_time;
+
+      pump_end_time(pump) = end_time;
+
+        current_time = current_time; 
         
         cars(i).pump = pump;
         
