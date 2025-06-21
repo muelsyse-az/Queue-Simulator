@@ -64,6 +64,7 @@ function userInput()
     cumSum = 0;    
     current_time = 0;
     petrolData = PetrolType();
+    pump_end_time = zeros(1,4); %array that holds the end time for island [1,2,3,4]
 
     for i = 1:VehiclesAmountInput
         % Generate random number
@@ -119,16 +120,73 @@ function userInput()
         cars(i).price_per_litre = chosenPrice;
         cars(i).lane = lane;
         
+        
+        %if checks for occupied pumps
+        
+        if lane == 1
+            if current_time >= pump_end_time(2)
+                pump = 2;
+                
+            elseif current_time >= pump_end_time(1)
+                pump =1;
+            
+            else 
+                [wait_time , pump] = min(pump_end_time(1:2) - current_time); %get wait time, and the pump island that will be free in the earliest moment
+                current_time = current_time + wait_time; 
+            end
+        
+        
+        else 
+            if current_time >= pump_end_time(4)
+                pump = 4;
+                
+            elseif current_time >= pump_end_time(3)
+                pump = 3;
+            
+            else 
+                [wait_time , pump] = min(pump_end_time(3:4) - current_time); %get wait time, and the pump island that will be free in the earliest moment
+                pump = pump + 2 %offsets referred pump the either 3 or 4
+                current_time = current_time + wait_time; 
+            end 
+        end
+        
+        cars(i).pump = pump;
+        
+        %if else to get time service begins
+        if current_time > pump_end_time(pump)
+            start_time = current_time;
+            
+        else
+           start_time = pump_end_time(pump);
+        end 
+        
+        end_time = start_time + refuel_time;
+
+        cars(i).service_begin = start_time;
+        cars(i).service_end = end_time;
+        cars(i).waiting_time = start_time - cars(i).arrival_clock;
+        cars(i).time_spent = end_time - cars(i).arrival_clock;
+
+        % Update pump status
+        pump_end_time(pump) = end_time;
+        
+        
+                
+        
+              
+        
+        
      
         
         
     end
        for i=1:VehiclesAmountInput
-           fprintf('\n%s arrived at minute %d and began refueling with %s at Lane %d.\n', ...
+           fprintf('\n%s arrived at minute %d and began refueling with %s at Lane %d using Pump %d.\n', ...
            cars(i).name, ....
            cars(i).arrival_clock,...
            cars(i).petrol_type,...
-           cars(i).lane);
+           cars(i).lane,...
+           cars(i).pump);
         end
 
     % Display results
@@ -142,6 +200,37 @@ function userInput()
             cars(i).refuel_time, cars(i).probability, ...
             cars(i).lane, cars(i).petrol_type, cars(i).price_per_litre);
     end
+
+    
+%chatgpt what the helly starts here
+fprintf('\nPump Usage Details:\n');
+
+for p = 1:4
+    fprintf('\nPump %d:\n', p);
+    fprintf('%-6s | %-13s | %-13s | %-11s | %-12s | %-11s\n', ...
+        'Car', 'Refuel Time', 'Service Begin', 'Service End', 'Waiting Time', 'Time Spent');
+    fprintf('%s\n', repmat('-', 1, 80));
+
+    pump_used = false;
+    for i = 1:VehiclesAmountInput
+        if cars(i).pump == p
+            pump_used = true;
+            fprintf('%-6s | %-13d | %-13d | %-11d | %-12d | %-11d\n', ...
+                cars(i).name, ...
+                cars(i).refuel_time, ...
+                cars(i).service_begin, ...
+                cars(i).service_end, ...
+                cars(i).waiting_time, ...
+                cars(i).time_spent);
+        end
+    end
+
+    if ~pump_used
+        fprintf('No cars used this pump.\n');
+    end
+end
+    
+ 
 end
 
 
