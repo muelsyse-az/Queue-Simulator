@@ -119,6 +119,7 @@ function userInput()
         cars(i).price_per_litre = chosenPrice;
         cars(i).lane = lane;
         
+        
      
         
         
@@ -186,8 +187,6 @@ function [r, nextSeed, cumSum] = CumulativeLCG(seed, cumSum)
     cumSum = mod(cumSum + val, 1);
     r = cumSum;
 end
-
-
 
 
 
