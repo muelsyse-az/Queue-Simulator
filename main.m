@@ -1,9 +1,11 @@
 %================= MAIN FUNCTION =================%
 function main()
-  
+    diary('simulation_output.txt');  % Creates an output file, useful for debugging
+    diary on;
     petronas_logo();
     serviceType();
     userInput();
+    diary off;
 end
 %=================================================%
 
@@ -59,12 +61,12 @@ function userInput()
         HourModeInput = input('Choose again: ');
     end
 
-    seed = 123;    
-    cumSum = 0;    
+    seed = 123;
+    cumSum = 0;
     current_time = 0;
     petrolData = PetrolType();
     pump_end_time = zeros(1,4); %array that holds the end time for island [1,2,3,4]
-   
+
 
     for i = 1:VehiclesAmountInput
         % Generate random number
@@ -105,15 +107,22 @@ function userInput()
                 break;
             end
         end
-
-        lane = mod(i-1,2) + 1;
+        % Lane Assignment Logic.
+        % To make it closer to reality, let's make it so that people are
+        % more likely to go for lane 1 than lane 2
+        % e.g. because it is closer
+        if rand < 0.6
+        lane = 1;
+        else
+        lane = 2;
+        end
 
         if i == 1
     arrival_time = 0 + inter_time;
 else
     arrival_time = cars(i-1).arrival_clock + inter_time;
 end
-       
+
         cars(i).name = ['Car ' num2str(i)];
         cars(i).random_number = rand_num;
         cars(i).interarrival_time = inter_time;
@@ -123,10 +132,10 @@ end
         cars(i).petrol_type = chosenPetrol;
         cars(i).price_per_litre = chosenPrice;
         cars(i).lane = lane;
-        
-      
-        
-        
+
+
+
+
 % Determine which pumps are available based on lane
 if lane == 1
     pumpCandidates = [1, 2];
@@ -138,10 +147,12 @@ end
 [pumpWait, idx] = min(pump_end_time(pumpCandidates));
 pump = pumpCandidates(idx);
 
-% Determine when service can begin
-arrival_time = current_time;  
-start_time = max(arrival_time, pump_end_time(pump));
-waiting_time = start_time - arrival_time;
+% Determine when service can begin (car must wait when pump is busy)
+% max() picks the later time: if pump is free, use arrival time.
+% Otherwise, if pump is busy, wait until it's free
+% This fixed that annoying bug where every car came at the same time lol
+start_time = max(cars(i).arrival_clock, pump_end_time(pump));
+waiting_time = start_time - cars(i).arrival_clock;
 end_time = start_time + refuel_time;
 
 % Update car info
@@ -152,9 +163,9 @@ cars(i).waiting_time = waiting_time;
 cars(i).time_spent = end_time - arrival_time;
 
 pump_end_time(pump) = end_time;
-     
-        
-        
+
+
+
     end
        for i=1:VehiclesAmountInput
            fprintf('\n%s arrived at minute %d and began refueling with %s at Lane %d using Pump %d.\n', ...
@@ -177,8 +188,7 @@ pump_end_time(pump) = end_time;
             cars(i).lane, cars(i).petrol_type, cars(i).price_per_litre);
     end
 
-    
-%chatgpt what the helly starts here
+
 fprintf('\nPump Usage Details:\n');
 
 for p = 1:4
@@ -232,7 +242,7 @@ end
             totalp1ServiceTime = cars(i).refuel_time + totalp1ServiceTime;
             pump1counter = pump1counter + 1;
         elseif cars(i).pump == 2
-            totalp2ServiceTime = cars(i).refuel_time + totalp2ServiceTime; 
+            totalp2ServiceTime = cars(i).refuel_time + totalp2ServiceTime;
             pump2counter = pump2counter + 1;
         elseif cars(i).pump == 3
             totalp3ServiceTime = cars(i).refuel_time + totalp3ServiceTime;
@@ -287,7 +297,7 @@ else
     p4AvgServiceTime = totalp4ServiceTime / pump4counter;
 end
 
-    
+
 
 
 fprintf('\n%s %.2f minutes\n%s %.2f minutes\n%s %.2f\n%s %.2f minutes\n%s %.2f minutes\n%s %.2f minutes\n%s %.2f minutes\n', ...
@@ -300,7 +310,7 @@ fprintf('\n%s %.2f minutes\n%s %.2f minutes\n%s %.2f\n%s %.2f minutes\n%s %.2f m
     'Average service time for Pump 4 is', p4AvgServiceTime);
 
 
- 
+
 end
 
 %===================== Petrol Type Function =====================%
@@ -312,7 +322,7 @@ function output = PetrolType()
 
     output.range = zeros(1, length(output.petrol)*2);
     lowerbound = 1;
-    
+
     for i = 1:length(output.petrol)
         output.range((i-1)*2 + 1) = lowerbound;
         output.range((i-1)*2 + 2) = round(output.cdf(i) * 100);
@@ -362,8 +372,6 @@ end
 
 
 
-                  
-     
 
 
 
@@ -371,4 +379,6 @@ end
 
 
 
-    
+
+
+

@@ -1,14 +1,15 @@
 function output = interarrival_time(rand_num , isPeak)
     disp('Running updated interarrival_time function...');
 
-    if isPeak
-        % Favor longer interarrival times
-        output.arrival_time = [1 2 3 4 5 6 7 8 9 10];
-        output.probability  = [0.05 0.05 0.08 0.10 0.12 0.15 0.15 0.12 0.10 0.08];
-    else
-        output.arrival_time = [2 3 4 5 6 7 8 9 10 11];
-        output.probability  = [0.05 0.05 0.08 0.10 0.12 0.15 0.15 0.12 0.10 0.08];
-    end
+if isPeak
+    % Peak hours: This should be around 80 cars/hour (1 every 45s). Pretty realistic.
+    output.arrival_time = [0.2 0.4 0.6 0.8 1.0 1.2 1.5 2.0 2.5 3.0];
+    output.probability  = [0.30 0.25 0.20 0.12 0.08 0.03 0.01 0.005 0.003 0.002];
+else
+    % Non-peak hours: This should be around 23 cars/hour (1 every few mins). That works.
+    output.arrival_time = [1.5 2.0 2.5 3.0 3.5 4.0 4.5 5.0 5.5 6];
+    output.probability  = [0.15 0.20 0.18 0.15 0.12 0.10 0.05 0.03 0.01 0.01];
+end
 
     % Normalize just in case
     output.probability = output.probability / sum(output.probability);
