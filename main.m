@@ -146,24 +146,7 @@ end_time = start_time + refuel_time;
 
         current_time = current_time; 
         
-        cars(i).pump = pump;
-        
-        if cars(i).arrival_clock >= pump_end_time(pump)
-            start_time = cars(i).arrival_clock;
-        else 
-            start_time = pump_end_time(pump);
-        end
-        
-        end_time = start_time + refuel_time;
-        cars(i).service_begin = start_time;
-        cars(i).service_end = end_time;
-        cars(i).waiting_time = start_time - cars(i).arrival_clock;
-        
-        cars(i).time_spent = end_time - cars(i).arrival_clock;
-       
-        
-        pump_end_time(pump) = end_time;
-        waited = true;
+      
     
     
               
