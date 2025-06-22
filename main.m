@@ -214,6 +214,12 @@ end
     totalp2ServiceTime = 0;
     totalp3ServiceTime = 0;
     totalp4ServiceTime = 0;
+
+    pump1counter = 0;
+    pump2counter = 0;
+    pump3counter = 0;
+    pump4counter = 0;
+
     for i = 1:VehiclesAmountInput
         totalWaitTime = totalWaitTime + cars(i).waiting_time;
         totalTimeSpent = totalTimeSpent + cars(i).time_spent;
@@ -223,13 +229,17 @@ end
 
         %-----Loop for each pump---------
         if cars(i).pump == 1
-            totalp1ServiceTime = cars(i).time_spent + totalp1ServiceTime;
+            totalp1ServiceTime = cars(i).refuel_time + totalp1ServiceTime;
+            pump1counter = pump1counter + 1;
         elseif cars(i).pump == 2
-            totalp2ServiceTime = cars(i).time_spent + totalp2ServiceTime; 
+            totalp2ServiceTime = cars(i).refuel_time + totalp2ServiceTime; 
+            pump2counter = pump2counter + 1;
         elseif cars(i).pump == 3
-            totalp3ServiceTime = cars(i).time_spent + totalp3ServiceTime;
+            totalp3ServiceTime = cars(i).refuel_time + totalp3ServiceTime;
+            pump3counter = pump3counter + 1;
         elseif cars(i).pump == 4
-            totalp4ServiceTime = cars(i).time_spent + totalp4ServiceTime;
+            totalp4ServiceTime = cars(i).refuel_time + totalp4ServiceTime;
+            pump4counter = pump4counter + 1;
         end
 
     end
@@ -252,10 +262,32 @@ end
     avgWaitTime = totalWaitTime / VehiclesAmountInput;
     avgTimeSpent = totalTimeSpent / VehiclesAmountInput;
     WaitProbability = waitingCounter / VehiclesAmountInput;
-    p1AvgServiceTime = totalp1ServiceTime / totalTimeSpent;
-    p2AvgServiceTime = totalp2ServiceTime / totalTimeSpent;
-    p3AvgServiceTime = totalp3ServiceTime / totalTimeSpent;
-    p4AvgServiceTime = totalp4ServiceTime / totalTimeSpent;
+
+if pump1counter == 0
+    p1AvgServiceTime = totalp1ServiceTime;
+else
+    p1AvgServiceTime = totalp1ServiceTime / pump1counter;
+end
+
+if pump2counter == 0
+    p2AvgServiceTime = totalp2ServiceTime;
+else
+    p2AvgServiceTime = totalp2ServiceTime / pump2counter;
+end
+
+if pump3counter == 0
+    p3AvgServiceTime = totalp3ServiceTime;
+else
+    p3AvgServiceTime = totalp3ServiceTime / pump3counter;
+end
+
+if pump4counter == 0
+    p4AvgServiceTime = totalp4ServiceTime;
+else
+    p4AvgServiceTime = totalp4ServiceTime / pump4counter;
+end
+
+    
 
 
 fprintf('\n%s %.2f minutes\n%s %.2f minutes\n%s %.2f\n%s %.2f minutes\n%s %.2f minutes\n%s %.2f minutes\n%s %.2f minutes\n', ...
