@@ -108,50 +108,50 @@ function userInput()
 
         lane = mod(i-1,2) + 1;
 
-        current_time = current_time + inter_time;
+        if i == 1
+    arrival_time = 0 + inter_time;
+else
+    arrival_time = cars(i-1).arrival_clock + inter_time;
+end
        
         cars(i).name = ['Car ' num2str(i)];
         cars(i).random_number = rand_num;
         cars(i).interarrival_time = inter_time;
-        cars(i).arrival_clock = current_time;
+        cars(i).arrival_clock = arrival_time;
         cars(i).refuel_time = refuel_time;
         cars(i).probability = prob;
         cars(i).petrol_type = chosenPetrol;
         cars(i).price_per_litre = chosenPrice;
         cars(i).lane = lane;
+        
       
         
         
-
+% Determine which pumps are available based on lane
 if lane == 1
     pumpCandidates = [1, 2];
 else
     pumpCandidates = [3, 4];
 end
 
-[pumpWait, idx] = min(pump_end_time(pumpCandidates) - current_time);
+% Find the pump that will be available the soonest
+[pumpWait, idx] = min(pump_end_time(pumpCandidates));
 pump = pumpCandidates(idx);
 
-start_time = max(current_time, pump_end_time(pump));
+% Determine when service can begin
+arrival_time = current_time;  
+start_time = max(arrival_time, pump_end_time(pump));
+waiting_time = start_time - arrival_time;
 end_time = start_time + refuel_time;
 
-      cars(i).lane = lane;
-      cars(i).pump = pump;
-      cars(i).service_begin = start_time;
-      cars(i).service_end = end_time;
-      cars(i).waiting_time = start_time - current_time;
-      cars(i).time_spent = end_time - current_time;
+% Update car info
+cars(i).pump = pump;
+cars(i).service_begin = start_time;
+cars(i).service_end = end_time;
+cars(i).waiting_time = waiting_time;
+cars(i).time_spent = end_time - arrival_time;
 
-      pump_end_time(pump) = end_time;
-
-        current_time = current_time; 
-        
-      
-    
-    
-              
-        
-        
+pump_end_time(pump) = end_time;
      
         
         
