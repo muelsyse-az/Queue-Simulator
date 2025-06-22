@@ -205,10 +205,70 @@ for p = 1:4
         fprintf('No cars used this pump.\n');
     end
 end
-    
+
+    %-------------------------%Average calculation%-------------------------------------%
+    waitingCounter = 0;
+    totalWaitTime = 0;
+    totalTimeSpent = 0;
+    totalp1ServiceTime = 0;
+    totalp2ServiceTime = 0;
+    totalp3ServiceTime = 0;
+    totalp4ServiceTime = 0;
+    for i = 1:VehiclesAmountInput
+        totalWaitTime = totalWaitTime + cars(i).waiting_time;
+        totalTimeSpent = totalTimeSpent + cars(i).time_spent;
+        if cars(i).waiting_time > 0
+            waitingCounter = waitingCounter + 1;
+        end
+
+        %-----Loop for each pump---------
+        if cars(i).pump == 1
+            totalp1ServiceTime = cars(i).time_spent + totalp1ServiceTime;
+        elseif cars(i).pump == 2
+            totalp2ServiceTime = cars(i).time_spent + totalp2ServiceTime; 
+        elseif cars(i).pump == 3
+            totalp3ServiceTime = cars(i).time_spent + totalp3ServiceTime;
+        elseif cars(i).pump == 4
+            totalp4ServiceTime = cars(i).time_spent + totalp4ServiceTime;
+        end
+
+    end
+
+    %          UNCOMMENT THIS TO CHECK EACH VARIABLE VALUE %
+    %---------------------------------------------------------------------------
+
+    % fprintf('\n%s %.2f\n%s %.2f\n%s %.2f\n%s %.2f\n%s %.2f\n%s %.2f\n%s %.2f\n', ...
+    % 'Total waiting time is ', totalWaitTime, ...
+    % 'Total time spent in system is ', totalTimeSpent, ...
+    % 'Number of customers who had to wait is ', waitingCounter, ...
+    % 'Total service time for Pump 1 is ', totalp1ServiceTime, ...
+    % 'Total service time for Pump 2 is ', totalp2ServiceTime, ...
+    % 'Total service time for Pump 3 is ', totalp3ServiceTime, ...
+    % 'Total service time for Pump 4 is ', totalp4ServiceTime);
+
+    %------------------------------------------------------------------------
+
+
+    avgWaitTime = totalWaitTime / VehiclesAmountInput;
+    avgTimeSpent = totalTimeSpent / VehiclesAmountInput;
+    WaitProbability = waitingCounter / VehiclesAmountInput;
+    p1AvgServiceTime = totalp1ServiceTime / VehiclesAmountInput;
+    p2AvgServiceTime = totalp2ServiceTime / VehiclesAmountInput;
+    p3AvgServiceTime = totalp3ServiceTime / VehiclesAmountInput;
+    p4AvgServiceTime = totalp4ServiceTime / VehiclesAmountInput;
+
+
+fprintf('\n%s %.2f\n%s %.2f\n%s %.2f\n%s %.2f\n%s %.2f\n%s %.2f\n%s %.2f\n', ...
+    'Average waiting time is ', avgWaitTime, ...
+    'Average time spent in system is ', avgTimeSpent, ...
+    'Probability a customer has to wait is ', WaitProbability, ...
+    'Average service time for Pump 1 is ', p1AvgServiceTime, ...
+    'Average service time for Pump 2 is ', p2AvgServiceTime, ...
+    'Average service time for Pump 3 is ', p3AvgServiceTime, ...
+    'Average service time for Pump 4 is ', p4AvgServiceTime);
+
  
 end
-
 
 %===================== Petrol Type Function =====================%
 function output = PetrolType()

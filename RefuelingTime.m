@@ -1,6 +1,6 @@
 function output = RefuelingTime(rand_num)
     rt.time = [2 3 4 5 6];
-    rt.probability = [0.10 0.10 0.20 0.30 0.30];
+    rt.probability = [0.10 0.10 0.20 0.30 0.30];       %adjust probabilities here
     
     cdf = cumsum(rt.probability);  % [0.10 0.20 0.40 0.70 1.00]
     
@@ -16,12 +16,12 @@ function output = RefuelingTime(rand_num)
             rt.time(i), rt.probability(i), cdf(i), startRange, endRange);
         startRange = endRange + 1;
     end
-    fprintf('--------------------------------------------------------------------|\n');
+    fprintf('--------------------------------------------------------------------|\n');    %line(12-19)for loop to dynamically create and fill table
     
-    % Convert rand_num to a value between 0 and 1
+    %returns the refueling time based on a random number chosen from 1-100
     r = rand_num / 100;
     idx = find(r <= cdf, 1, 'first');
-    output = rt.time(idx);
+    output = rt.time(idx);       
 end
 
 
